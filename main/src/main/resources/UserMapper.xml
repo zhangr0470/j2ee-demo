@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.j2ee.demo.main.UserMapper">
+    <resultMap type="User" id="userMap">
+        <id property="id" column="Id"/>
+        <result property="userName" column="UserName"/>
+        <result property="createDate" column="CreateDate"/>
+        <result property="lastUpdateDate" column="LastUpdateDate"/>
+    </resultMap>
+    <select id="selectUserByID" parameterType="int" resultType="User" >
+        select * from user where id = #{id}
+    </select>
+    <select id="getUsers"  resultMap="userMap">
+        select * from user
+    </select>
+    <insert id="addUser" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        insert into user (UserName,CreateDate)
+        values (#{userName},#{createDate})
+    </insert>
+    <update id="updateUser" parameterType="User">
+        update user
+        <set>
+            <if test="userName != null and  userName.length()!=0">UserName=#{userName},</if>
+            <if test="createDate != null">CreateDate=#{createDate},</if>
+        </set>
+        where id=#{id}
+    </update>
+</mapper>
