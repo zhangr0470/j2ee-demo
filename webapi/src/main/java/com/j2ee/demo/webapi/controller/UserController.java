@@ -34,16 +34,16 @@ public class UserController {
     }
 
     @RequestMapping(value = "/addUser", method = RequestMethod.GET)
-    public ModelAndView getUser(@RequestParam(value = "id") Integer id, @RequestParam(value = "name") String name) {
+    public String getUser(@RequestParam(value = "id") Integer id, @RequestParam(value = "name") String name) {
 
         ModelAndView view = new ModelAndView("users");
-        List<User> users = new ArrayList<User>();
+        List<User> users;
         User user = new User();
         user.setId(id);
         user.setName(name);
-        users.add(user);
-        view.addObject("users", users);
-        return view;
+        userService.addUser(user);
+        return "redirect:users";
+
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)

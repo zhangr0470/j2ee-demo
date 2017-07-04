@@ -7,16 +7,36 @@
     <context:component-scan base-package="com.j2ee.demo.main"/>
     <bean name="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
         <!-- 核心线程数 -->
-        <property name="corePoolSize" value="5" />
+        <property name="corePoolSize" value="5"/>
         <!-- 最大线程数 -->
-        <property name="maxPoolSize" value="10" />
+        <property name="maxPoolSize" value="10"/>
         <!-- 队列最大长度 >=mainExecutor.maxSize -->
-        <property name="queueCapacity" value="200" />
+        <property name="queueCapacity" value="200"/>
         <!-- 线程池维护线程所允许的空闲时间 -->
-        <property name="keepAliveSeconds" value="300" />
+        <property name="keepAliveSeconds" value="300"/>
         <!-- 线程池对拒绝任务(无线程可用)的处理策略 ThreadPoolExecutor.CallerRunsPolicy策略 ,调用者的线程会执行该任务,如果执行器已关闭,则丢弃.  -->
         <property name="rejectedExecutionHandler">
-            <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
+            <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy"/>
         </property>
+    </bean>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          destroy-method="close">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/demo"/>
+        <property name="user" value="root"/>
+        <property name="password" value="123456"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--dataSource属性指定要用到的连接池-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--configLocation属性指定mybatis的核心配置文件-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+    </bean>
+
+    <bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+        <property name="mapperInterface" value="com.j2ee.demo.main.UserMapper" />
     </bean>
 </beans>

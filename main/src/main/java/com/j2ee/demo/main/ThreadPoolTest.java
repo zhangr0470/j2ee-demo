@@ -1,11 +1,13 @@
 package com.j2ee.demo.main;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.io.Console;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -19,6 +21,8 @@ public class ThreadPoolTest {
 
     @Resource
     private ThreadPoolTaskExecutor taskExecutor;
+    @Autowired
+    private UserMapper userMapper;
 
     public void start() {
         System.out.printf("start\n");
@@ -51,6 +55,14 @@ public class ThreadPoolTest {
                 e.printStackTrace();
             }
         }
+
+        User user = new User();
+        user.setUserName("hellonewspring");
+        user.setCreateDate(new Date());
+        userMapper.addUser(user);
+
+        System.out.print(String.format("new userid :%s", user.getId()));
+
         System.out.printf("end\n");
     }
 }
